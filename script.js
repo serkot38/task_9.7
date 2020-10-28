@@ -15,13 +15,17 @@ function updateAction(OperandA, SelectOperation) {
     showAction(lastOperand, operation)
 }
 
+function showAction(lastOperand, operation) {
+    document.querySelector('.action').innerText = lastOperand + operation;
+}
+
 function updateJournal(operandB, result) {
     document.querySelector(".journal ul").innerHTML += lastOperand + operation + operandB + "=" + result + "<br>";
 }
 
-function showAction(lastOperand, operation) {
-    document.querySelector('.action').innerText = lastOperand + operation;
-}
+document.querySelector("#btn_journal").addEventListener('click', function () {
+    document.querySelector(".journal").classList.toggle('journal-show');
+})
 
 document.querySelector('#btn_clr').addEventListener('click', function () {
     lastOperand = 0;
