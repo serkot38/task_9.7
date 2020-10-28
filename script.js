@@ -3,47 +3,67 @@ let operation = null;
 
 const inputWindow = document.getElementById('inputWindow');
 
-document.getElementById('btn_clr').addEventListener('click', function () {
+function updateAction(OperandA, SelectOperation) {
+    if (operation === null) {
+        lastOperand = parseFloat(OperandA);
+        operation = SelectOperation;
+        inputWindow.value = "0";
+    }
+    else {
+        operation = SelectOperation;
+    }
+    showAction(lastOperand, operation)
+}
+
+function updateJournal(operandB, result) {
+    document.querySelector(".journal ul").innerHTML += lastOperand + operation + operandB + "=" + result + "<br>";
+}
+
+function showAction(lastOperand, operation) {
+    document.querySelector('.action').innerText = lastOperand + operation;
+}
+
+document.querySelector('#btn_clr').addEventListener('click', function () {
+    lastOperand = 0;
+    operation = null;
     inputWindow.value = '0';
+    showAction("", "");
 })
 
-document.getElementById('btn_sum').addEventListener('click', function () {
-    lastOperand = parseFloat(inputWindow.value);
-    operation = 'sum';
-	inputWindow.value = '';
+document.querySelector("#btn_sum").addEventListener('click', function () {
+    updateAction(inputWindow.value, "+");
 })
 
-document.getElementById('btn_def').addEventListener('click', function () {
-    lastOperand = parseFloat(inputWindow.value);
-    operation = 'def';
-    inputWindow.value = '';
+document.querySelector("#btn_def").addEventListener('click', function () {
+    updateAction(inputWindow.value, "-");
 })
 
-document.getElementById('btn_mult').addEventListener('click', function () {
-    lastOperand = parseFloat(inputWindow.value);
-    operation = 'mult';
-    inputWindow.value = '';
+document.querySelector("#btn_mult").addEventListener('click', function () {
+    updateAction(inputWindow.value, "*");
 })
 
-document.getElementById('btn_div').addEventListener('click', function () {
-    lastOperand = parseFloat(inputWindow.value);
-    operation = 'div';
-    inputWindow.value = '';
+document.querySelector("#btn_div").addEventListener('click', function () {
+    updateAction(inputWindow.value, "/");
 })
 
-document.getElementById('btn_sqr').addEventListener('click', function () {
+
+document.querySelector('#btn_sqr').addEventListener('click', function () {
     lastOperand = parseFloat(inputWindow.value);
 	const result = Math.pow(lastOperand, 2);
 	inputWindow.value = result;
 })
 
-document.getElementById('btn_sqrt').addEventListener('click', function () {
-    lastOperand = parseFloat(inputWindow.value);
-	const result = Math.sqrt(lastOperand);
-	inputWindow.value = result;
+document.querySelector('#btn_sqrt').addEventListener('click', function () {
+    const v = inputWindow.value;
+    if (v < 0) {
+        alert('Недопустимый ввод');
+    } else {
+        inputWindow.value = Math.sqrt(v);
+        document.querySelector(".journal ul").innerHTML += "sqrt(" + v + ")=" + inputWindow.value + "<br>";
+    }
 })
 
-document.getElementById('btn_neg').addEventListener('click', function () {
+document.querySelector('#btn_neg').addEventListener('click', function () {
 	lastOperand = parseFloat(inputWindow.value);
 	const result = neg(lastOperand);
 	inputWindow.value = result;
@@ -53,37 +73,39 @@ document.getElementById('btn_neg').addEventListener('click', function () {
 	}
 })
 
-document.getElementById('btn_calc').addEventListener('click', function () {
-    if (operation === 'sum') {
-        const result = lastOperand + parseFloat(inputWindow.value);
-		operation = null;
-        lastOperand = 0;
+document.querySelector('#btn_calc').addEventListener('click', function () {
+    if (operation != null) {
+        let val = parseFloat(inputWindow.value);
+
+        if (val == 0 && operation == "/") {
+            alert('Недопустимый ввод');
+            return false;
+        }
+
+        switch (operation) {
+            case '+':
+                result = lastOperand + val;
+                break;
+            case '-':
+                result = lastOperand - val;
+                break;
+            case '*':
+                result = lastOperand * val;
+                break;
+            case '/':
+                result = lastOperand / val;
+                break;
+        }
+
         inputWindow.value = result;
-    }
-	
-	if (operation === 'def') {
-        const result = lastOperand - parseFloat(inputWindow.value);
+        updateJournal(val, result)
+        lastOperand = 0;
         operation = null;
-        lastOperand = 0;
-		inputWindow.value = result;
-    }
-	
-	if (operation === 'mult') {
-        const result = lastOperand * parseFloat(inputWindow.value);
-		operation = null;
-        lastOperand = 0;
-        inputWindow.value = result;
-    }
-	
-	if (operation === 'div') {
-        const result = lastOperand / parseFloat(inputWindow.value);
-		operation = null;
-        lastOperand = 0;
-        inputWindow.value = result;
+        showAction("", "");
     }
 })
 
-document.getElementById('btn_1').addEventListener('click', function () {
+document.querySelector('#btn_1').addEventListener('click', function () {
     if (inputWindow.value == '0') {
 		inputWindow.value = '1';
 	} else {
@@ -91,7 +113,7 @@ document.getElementById('btn_1').addEventListener('click', function () {
 	}
 })
 
-document.getElementById('btn_2').addEventListener('click', function () {
+document.querySelector('#btn_2').addEventListener('click', function () {
     if (inputWindow.value == '0') {
 		inputWindow.value = '2';
 	} else {
@@ -99,7 +121,7 @@ document.getElementById('btn_2').addEventListener('click', function () {
 	}
 })
 
-document.getElementById('btn_3').addEventListener('click', function () {
+document.querySelector('#btn_3').addEventListener('click', function () {
     if (inputWindow.value == '0') {
 		inputWindow.value = '3';
 	} else {
@@ -107,7 +129,7 @@ document.getElementById('btn_3').addEventListener('click', function () {
 	}
 })
 
-document.getElementById('btn_4').addEventListener('click', function () {
+document.querySelector('#btn_4').addEventListener('click', function () {
     if (inputWindow.value == '0') {
 		inputWindow.value = '4';
 	} else {
@@ -115,7 +137,7 @@ document.getElementById('btn_4').addEventListener('click', function () {
 	}
 })
 
-document.getElementById('btn_5').addEventListener('click', function () {
+document.querySelector('#btn_5').addEventListener('click', function () {
     if (inputWindow.value == '0') {
 		inputWindow.value = '5';
 	} else {
@@ -123,7 +145,7 @@ document.getElementById('btn_5').addEventListener('click', function () {
 	}
 })
 
-document.getElementById('btn_6').addEventListener('click', function () {
+document.querySelector('#btn_6').addEventListener('click', function () {
     if (inputWindow.value == '0') {
 		inputWindow.value = '6';
 	} else {
@@ -131,7 +153,7 @@ document.getElementById('btn_6').addEventListener('click', function () {
 	}
 })
 
-document.getElementById('btn_7').addEventListener('click', function () {
+document.querySelector('#btn_7').addEventListener('click', function () {
     if (inputWindow.value == '0') {
 		inputWindow.value = '7';
 	} else {
@@ -139,7 +161,7 @@ document.getElementById('btn_7').addEventListener('click', function () {
 	}
 })
 
-document.getElementById('btn_8').addEventListener('click', function () {
+document.querySelector('#btn_8').addEventListener('click', function () {
     if (inputWindow.value == '0') {
 		inputWindow.value = '8';
 	} else {
@@ -147,7 +169,7 @@ document.getElementById('btn_8').addEventListener('click', function () {
 	}
 })
 
-document.getElementById('btn_9').addEventListener('click', function () {
+document.querySelector('#btn_9').addEventListener('click', function () {
     if (inputWindow.value == '0') {
 		inputWindow.value = '9';
 	} else {
@@ -155,10 +177,12 @@ document.getElementById('btn_9').addEventListener('click', function () {
 	}
 })
 
-document.getElementById('btn_0').addEventListener('click', function () {
+document.querySelector('#btn_0').addEventListener('click', function () {
     inputWindow.value += '0';
 })
 
-document.getElementById('btn_fra').addEventListener('click', function () {
-    inputWindow.value += '.';
+document.querySelector('#btn_fra').addEventListener('click', function () {
+    if (inputWindow.value.includes('.') == false) {
+        inputWindow.value += ".";
+    }
 })
